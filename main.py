@@ -15,18 +15,46 @@ conversation = [
 
 response = model.invoke(conversation)
 
-conversation.append(response)
-conversation.append(HumanMessage("And C40?"))
+# conversation.append(response)
+# conversation.append(HumanMessage("And C40?"))
 
-response = model.invoke(conversation)
+# response = model.invoke(conversation)
 
-conversation.append(response)
-conversation.append(HumanMessage("What about order B22?"))
+# conversation.append(response)
+# conversation.append(HumanMessage("What about order B22?"))
 
-response = model.invoke(conversation)
+# response = model.invoke(conversation)
 
-for message in conversation:
-    message.pretty_print()
-    print(message.type, end="\n\n")
+# for message in conversation:
+#     message.pretty_print()
+#     print(message.type, end="\n\n")
 
-print(response.text)
+# print(response.text)
+
+"""Compare with invoke with stream"""
+# print(response.text)
+
+# response_list = []
+# for chunk in model.stream(conversation):
+#     print(f"####### Chunk: {chunk.text}")
+#     response_list.append(chunk.text)
+
+# print(("").join(response_list))
+
+
+""" Batch processing and comparing reply ids"""
+replies = model.batch(
+    [
+        "Why do parrots have colorful feathers?",
+        "How do airplanes fly?",
+        "What is quantum computing?",
+        "What is Gen AI?",
+        "How Gen AI is so popular?",
+        "What is being good Gen ai developer mean?",
+        "From how many years AI exists?"
+    ],
+    config={"max_concurrency": 5},   # at most 5 calls at the same time
+)
+
+for idx, reply in enumerate(replies):
+    print(f"{idx + 1}: {reply.id}, {reply.text}")
