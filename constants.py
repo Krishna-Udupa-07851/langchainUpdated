@@ -1,0 +1,1 @@
+GROQ_MODEL = "groq:openai/gpt-oss-120b"
